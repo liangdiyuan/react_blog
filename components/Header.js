@@ -16,7 +16,7 @@ const Header = (props) => {
   }, []);
 
   const handleClick = (e) => {
-    if (e.key === "1") {
+    if (e.key === "0") {
       Router.push("/");
     } else {
       Router.push(`/list?id=${e.key}`);
@@ -32,6 +32,10 @@ const Header = (props) => {
         </Col>
         <Col className="menu-div" xs={0} sm={0} md={14} lg={8} xl={6}>
           <Menu mode="horizontal" onClick={handleClick}>
+            <Menu.Item key="0">
+              {React.createElement(Icons.HomeOutlined)}
+              博客首页
+            </Menu.Item>
             {navList.map((item) => {
               return (
                 <Menu.Item key={item.id}>
