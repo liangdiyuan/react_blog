@@ -3,6 +3,10 @@
 后台https://github.com/liangdiyuan/react_blog_service
 
 ```bash
+$ npm i 
+# or
+$ yarn add
+
 npm run dev
 # or
 yarn dev
