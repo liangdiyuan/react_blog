@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Head from "next/head";
 import Link from "next/link";
-import { Row, Col, List } from "antd";
+import { Row, Col, List, Breadcrumb } from "antd";
+import servicePtah from "../config/apiUrl";
 import {
   CalendarOutlined,
   FolderOutlined,
@@ -13,16 +14,16 @@ import axios from "axios";
 import marked from "marked";
 // https://www.npmjs.com/package/highlight.js
 import hljs from "highlight.js";
-import servicePtah from "../config/apiUrl";
 import Header from "../components/Header";
 import Author from "../components/Author";
 import Advert from "../components/Advert";
 import Footer from "../components/Footer";
-import "../styles/pages/index.css";
+import "../styles/pages/list.css";
 import "highlight.js/styles/monokai-sublime.css";
 
-const Home = (props) => {
+const ListPage = (props) => {
   const [list, setList] = useState(props.data);
+
   const renderer = new marked.Renderer();
   marked.setOptions({
     renderer: renderer,
@@ -38,16 +39,28 @@ const Home = (props) => {
     },
   });
 
+  useEffect(() => {
+    setList(props.data);
+  });
+
   return (
     <div>
       <Head>
-        <title>Home</title>
+        <title>ListPage</title>
       </Head>
       <Header />
       <Row className="comm-main" justify="center">
         <Col className="comm-left" xs={24} sm={24} md={16} lg={18} xl={14}>
+          <div className="bread-div">
+            <Breadcrumb>
+              <Breadcrumb.Item>
+                <a href="/">首页</a>
+              </Breadcrumb.Item>
+              <Breadcrumb.Item>视频列表</Breadcrumb.Item>
+            </Breadcrumb>
+          </div>
+
           <List
-            header={<div>最新日志</div>}
             itemLayout="vertical"
             dataSource={list}
             renderItem={(item) => (
@@ -56,18 +69,18 @@ const Home = (props) => {
                   <Link
                     href={{ pathname: "/detailed", query: { id: item.id } }}
                   >
-                    <a>{item.title}</a>
+                    <a> {item.title}</a>
                   </Link>
                 </div>
                 <div className="list-icon">
                   <span>
-                    <CalendarOutlined /> {item.createTime}
+                    <CalendarOutlined /> 2019-06-28
                   </span>
                   <span>
-                    <FolderOutlined /> {item.typeName}
+                    <FolderOutlined /> 视频教程
                   </span>
                   <span>
-                    <FireOutlined /> {item.viewCount}人
+                    <FireOutlined /> 5369人
                   </span>
                 </div>
                 <div
@@ -89,9 +102,10 @@ const Home = (props) => {
   );
 };
 
-Home.getInitialProps = async () => {
-  const res = await axios(servicePtah.getList);
+ListPage.getInitialProps = async (context) => {
+  const { id } = context.query;
+  const res = await axios(servicePtah.getArticleListById + id);
   return res.data;
 };
 
-export default Home;
+export default ListPage;
